@@ -34,6 +34,11 @@ public class Paragraph
 			return false;
 	}
 	
+	public int size()
+	{
+		return lines.size();
+	}
+	
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();

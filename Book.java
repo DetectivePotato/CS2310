@@ -32,7 +32,7 @@ public class Book
 	
 	public void addParagraph(Paragraph para)
 	{
-			paragraphs.add(para);
+		paragraphs.add(para);
 	}
 	
 	public String getTitle()
@@ -49,6 +49,8 @@ public class Book
 	{
 		StringBuilder sb = new StringBuilder();
 		
+		int numLines = 0;
+		
 		sb.append("Title: " + title + "\n");
 		sb.append("Author:" + author + "\n");
 		
@@ -56,9 +58,12 @@ public class Book
 		{
 			sb.append(para.toString());
 			sb.append("\n");
+			
+			numLines += para.size();
 		}
 		
 		sb.append("\n" + "No. Paragraphs: " + paragraphs.size());
+		sb.append("\n" + "No. Lines: " + numLines);
 		return sb.toString();
 	}
 }

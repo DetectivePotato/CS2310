@@ -8,6 +8,7 @@ public class TextReader
 {
 	private String filePath;
 	private Book book;
+	private int emptyParagraphs = 0;
 	
 	public TextReader(String filePath)
 	{
@@ -40,18 +41,18 @@ public class TextReader
 			{			
 				//Split the line into each word
 				String[] lineSplit = currentLine.split(" ");
-				
-				//Empty line
-				if(lineSplit[0].equals(""))
+
+				if(emptyParagraphs >= 1 && !lineSplit[0].equals(""))
 				{
-					//Empty paragraph
-					if(para.isEmpty())
-					{
-						para = new Paragraph();
-					}
-					
+					para = new Paragraph();
 					book.addParagraph(para);
+					emptyParagraphs = 0;
 				}
+				else if(!lineSplit[0].equals(""))
+				{
+					emptyParagraphs++;
+				}
+				
 				//Either get info from the line or store it in a new Line object
 				parseLine(lineSplit, para);
 			}
