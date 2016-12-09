@@ -1,61 +1,53 @@
-import java.io.IOException;
-import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
-//"D:\\Documents\\Data Structures\\Concordence Viewer Coursework\\data\\emmaEd11.txt"
-
-public class TextReader
+/**
+ * TextReader takes a formatted *.txt file and converts it into Lines and Paragraphs for a Book object
+ * 
+ * @author Anthony Wall
+ */
+public class TextReader 
 {
-	private String filePath;
 	private Book book;
-	private int emptyParagraphs = 0;
 	
-	public TextReader(String filePath)
+	/**
+	 * Construct a TextReader, creating an empty Book object
+	 */
+	public TextReader()
 	{
-		this.filePath = filePath;
 		book = new Book();
 	}
-
+	
 	/**
-	 * Read a provided file and serialise key data for later processing
+	 * Read a given *.txt file and convert it into a Book object
+	 * 
+	 * @param filePath the *.txt file to read
+	 * @return a Book object representation of the *.txt file
 	 */
-	public void ReadFile()
+	public Book readFile(String filePath)
 	{
-		//Define the Buffered Reader
-		BufferedReader br = null;
+		BufferedReader reader = null;
 		
-		//Initialise the first Paragraph
-		Paragraph para = new Paragraph();
-		
-		//Read through each line of the file
 		try
 		{
-			//Define a String ready to store each line
-			String currentLine;
+			//Declare placeholder Strings for the BufferedReader
+			String currentLine = "";
+			String bookString = "";
 			
-			//Initialise the Buffered Reader with the desired file
-			br = new BufferedReader(new FileReader(filePath));
+			reader = new BufferedReader(new FileReader(filePath));
 			
-			//Read through each line of the file
-			while((currentLine = br.readLine()) != null)
-			{			
-				//Split the line into each word
-				String[] lineSplit = currentLine.split(" ");
-
-				if(emptyParagraphs >= 1 && !lineSplit[0].equals(""))
-				{
-					para = new Paragraph();
-					book.addParagraph(para);
-					emptyParagraphs = 0;
-				}
-				else if(!lineSplit[0].equals(""))
-				{
-					emptyParagraphs++;
-				}
-				
-				//Either get info from the line or store it in a new Line object
-				parseLine(lineSplit, para);
+			//Read each line and store it for later parsing
+			while((currentLine = reader.readLine()) != null)
+			{
+				bookString += currentLine;
 			}
+			
+			//Split the text into paragraphs and add it to the Book
+			String[] paragraphs = bookString.split("(?m)(?=^\\s{2})");
+			convertParagraphsToBook(paragraphs);
+			
 		}
 		catch(IOException e)
 		{
@@ -64,67 +56,30 @@ public class TextReader
 		finally
 		{
 			try
-			{			
-				//Console test
-				System.out.println(book.toString());
-				
-				//Close the BufferedReader for garbage collection
-				if (br != null)
-					br.close();
+			{
+				if(reader != null)
+					reader.close();
 			}
 			catch(IOException ex)
 			{
 				ex.printStackTrace();
 			}
 		}
-
+		
+		return book;
 	}
 	
-	
 	/**
-	 * Takes a given String array pulls necessary information from it or passes it to the constructor of a new Line object
-	 * @param line	The array of words representing the line
-	 * @param para	The paragraph the line belongs too
+	 * Convert a String representation of the Book into Paragraphs and add them to the Book
+	 * 
+	 * @param paragraphs The string Book to be converted
 	 */
-	private void parseLine(String[] line, Paragraph para)
+	public void convertParagraphsToBook(String[] paragraphs)
 	{
-		//First word of the line
-		switch(line[0])
+		//Add each Paragraph to the Book
+		for(String paragraph : paragraphs)
 		{
-			case "Title:":
-			{	
-				String newTitle = "";
-				for(int i = 1; i<line.length; i++)
-				{
-					newTitle += line[i] + " ";
-				}
-				book.setTitle(newTitle);
-				break;
-			}
-			
-			case "Author:":
-			{
-				String newAuthor = "";
-				for(int i = 1; i<line.length; i++)
-				{
-					newAuthor += line[i] + " ";
-				}
-				book.setAuthor(newAuthor);
-				break;
-			}
-			
-			case "VOLUME":
-				para.addVolume(line[1]);
-				break;
-				
-			case "CHAPTER":
-				para.addChapter(line[1]);
-				break;
-				
-			//Create a new Line object
-			default:
-				Line newLine = new Line(line);
-				para.addLine(newLine);
+			book.addParagraph(new Paragraph(paragraph));
 		}
 	}
 }
