@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 
 /**
- * Line represents a String containing several words
+ * Line represents a String containing several words in order. 
+ * Each word is cleaned of punctuation or special characters and added to a seperate list for searching
  * 
  * @author Anthony Wall
  * @version 08/12/2016
