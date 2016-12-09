@@ -57,6 +57,13 @@ public class Line
 	{		
 		return line;
 	}
+	/**
+	 * Returns an array of all words in the Line
+	 */
+	public String[] getWords()
+	{
+		return words.toArray(new String[words.size()]);
+	}
 	
 	/**
 	 * Removes all punctuation and special characters from a word

@@ -13,23 +13,21 @@ public class ParagraphTest
 			+ "\nof existence; and had lived nearly twenty-one years in the world"
 			+ "\nwith very little to distress or vex her.";
 	
-	private Line testLine1;
-	private Line testLine2;
-	private Line testLine3;
-	private Line testLine4;
-	private Line[] testArray;
+	private String[] testLines;
 	
 	@Before
 	public void setUp() throws Exception 
 	{
-		testParagraph = new Paragraph(testText);
+		testLines = testText.split("\n");
+		
+		testParagraph = new Paragraph(testLines);
 	}
 
 	@Test
 	public void testContains() 
 	{
 		ArrayList<Line> searchResults = new ArrayList<Line>();
-		System.out.println(testParagraph.toString() + "--------------");
+		System.out.println(testParagraph.toString() + "\n--------------\nSearchResults:(and)");
 		
 		searchResults = testParagraph.contains("and");
 		for(Line line: searchResults)

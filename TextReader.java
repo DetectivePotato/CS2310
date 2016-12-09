@@ -41,12 +41,13 @@ public class TextReader
 			//Read each line and store it for later parsing
 			while((currentLine = reader.readLine()) != null)
 			{
-				bookString += currentLine;
+				bookString += currentLine + "\n";
 			}
-			
 			//Split the text into paragraphs and add it to the Book
-			String[] paragraphs = bookString.split("(?m)(?=^\\s{2})");
-			convertParagraphsToBook(paragraphs);
+			convertToParagraphs(bookString);
+			
+			//Free memory being used by the String
+			bookString = "";
 			
 		}
 		catch(IOException e)
@@ -57,6 +58,8 @@ public class TextReader
 		{
 			try
 			{
+				book.toString();
+				
 				if(reader != null)
 					reader.close();
 			}
@@ -65,7 +68,6 @@ public class TextReader
 				ex.printStackTrace();
 			}
 		}
-		
 		return book;
 	}
 	
@@ -74,12 +76,102 @@ public class TextReader
 	 * 
 	 * @param paragraphs The string Book to be converted
 	 */
-	public void convertParagraphsToBook(String[] paragraphs)
+	private void convertToParagraphs(String bookString)
 	{
+		int emptyParagraphs = 0;
+		Paragraph paragraph = new Paragraph();
+		
+		//Split the line into each word
+		String[] lineSplit = bookString.split("\n");
+		/*for(String line : lineSplit)
+		{
+			System.out.println(line);
+		}*/
+		ArrayList<String> linesToAdd = new ArrayList<String>();
+
+		//Look for paragraph spaces using blank lines
+		for(String line : lineSplit)
+		{
+			if(emptyParagraphs >= 1 && !line.equals(""))
+			{
+				parseLine(line, paragraph);
+				linesToAdd.add(line);
+				
+				String[] lines = linesToAdd.toArray(new String[linesToAdd.size()]);
+				paragraph = new Paragraph(lines);
+				book.addParagraph(paragraph);
+				System.out.println(paragraph.toString());
+				emptyParagraphs = 0;
+				linesToAdd.clear();
+			}
+			else if(line.equals(""))
+			{
+				System.out.println("Found Blank line, adding to " + emptyParagraphs);
+				emptyParagraphs++;
+			}
+			else
+			{
+				parseLine(line, paragraph);
+				linesToAdd.add(line);
+			}
+		}
+
+		/*//Split the book into paragraphs
+		String[] paragraphs = bookString.split("\r\n{2}");
+		
 		//Add each Paragraph to the Book
 		for(String paragraph : paragraphs)
 		{
 			book.addParagraph(new Paragraph(paragraph));
+		}*/
+	}
+	
+	/**
+	 * Takes a given String array pulls necessary information from it
+	 * 
+	 * @param line	The array of words representing the line
+	 * @param para	The paragraph the line belongs too
+	 */
+	private void parseLine(String lineToParse, Paragraph paragraph)
+	{
+		String[] line = lineToParse.split(" ");
+		
+		//First word of the line
+		switch(line[0].toLowerCase())
+		{
+			case "title":
+			{	
+				String newTitle = "";
+				for(int i = 1; i<line.length; i++)
+				{
+					newTitle += line[i] + " ";
+				}
+				book.setTitle(newTitle);
+				break;
+			}
+			
+			case "author":
+			{
+				String newAuthor = "";
+				for(int i = 1; i<line.length; i++)
+				{
+					newAuthor += line[i] + " ";
+				}
+				book.setAuthor(newAuthor);
+				break;
+			}
+			
+			case "volume":
+			{
+				paragraph.setVolume(line[1]);
+				break;
+			}
+			
+			case "chapter":
+			{
+				paragraph.setChapter(line[1]);
+				break;
+			}
 		}
 	}
 }

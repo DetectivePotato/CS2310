@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class Paragraph 
 {
 	private ArrayList<Line> lines;
+	private String volume;
+	private String chapter;
 	
 	/**
 	 * Construct an empty Paragraph
@@ -15,6 +17,24 @@ public class Paragraph
 	public Paragraph()
 	{
 		lines = new ArrayList<Line>();
+		volume = "";
+		chapter = "";
+	}
+	/**
+	 * Construct a Paragraph from a given String Array
+	 * 
+	 * @param paragraphStrings The Array to create the Paragarph from
+	 */
+	public Paragraph(String[] lineStrings)
+	{
+		this();
+		
+		for(String line : lineStrings)
+		{
+			if(!line.equals(""))
+				addLine(line);
+		}
+		
 	}
 	
 	/**
@@ -31,7 +51,8 @@ public class Paragraph
 		//Add each line to the Paragraph
 		for(String line : lines)
 		{
-			addLine(line);
+			if(!line.equals(""))
+				addLine(line);
 		}
 	}
 	
@@ -75,6 +96,44 @@ public class Paragraph
 		}
 		
 		return paragraphString.toString();
+	}
+	
+	/**
+	 * Set the volume this Paragraph is contained in
+	 * 
+	 * @param newVolume the volume this Paragraph is in
+	 */
+	public void setVolume(String newVolume)
+	{
+		volume = newVolume;
+	}
+	
+	/**
+	 * Set the chapter this Paragraph is contained in
+	 * 
+	 * @param newChapter the chapter this Paragraph is in
+	 */
+	public void setChapter(String newChapter)
+	{
+		chapter = newChapter;
+	}
+	
+	/**
+	 * Return the current volume
+	 * @return The String of the volume this Paragraph is contained in
+	 */
+	public String getVolume()
+	{
+		return volume;
+	}
+	
+	/**
+	 * Return the current chapter
+	 * @return The String of the chapter this Paragraph is contained in
+	 */
+	public String getChapter()
+	{
+		return chapter;
 	}
 	
 	/**

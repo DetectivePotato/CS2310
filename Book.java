@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class Book 
 {
 	private ArrayList<Paragraph> paragraphs;
+	private String title;
+	private String author;
 	
 	/**
 	 * Construct an empty Book object and initialise the List
@@ -16,6 +18,8 @@ public class Book
 	public Book()
 	{
 		paragraphs = new ArrayList<Paragraph>();
+		title = "";
+		author = "";
 	}
 	
 	/**
@@ -40,7 +44,7 @@ public class Book
 	 * @param target The word to look for
 	 * @return A list of all Line objects containing the target word
 	 */
-	public ArrayList<Line> contains(String target)
+	public Line[] contains(String target)
 	{
 		ArrayList<Line> searchResults = new ArrayList<Line>();
 		
@@ -48,9 +52,8 @@ public class Book
 		for(Paragraph paragraph : paragraphs)
 		{
 			searchResults.addAll(paragraph.contains(target));
-		}
-		
-		return searchResults;
+		}	
+		return searchResults.toArray(new Line[searchResults.size()]);
 	}
 	
 	/**
@@ -58,13 +61,45 @@ public class Book
 	 */
 	public String toString()
 	{
+		//Placeholder Strings for chapter and volume display
+		String currentChapter = "";
+		String lastChapter = "";
+		String currentVolume = "";
+		String lastVolume = "";
+		
 		StringBuilder bookString = new StringBuilder();
 		
+		//Add header details for the Book to the String
+		bookString.append("Title: " + title + "\n");
+		bookString.append("Author: " + author + "\n\n");
+		
+		//Iterate through each paragraph in the Book looking for
+		//any chapter or volume changes and add it all to the String
 		for(int i = 0; i < paragraphs.size(); i++)
 		{
-			bookString.append(paragraphs.get(i).toString());
+			Paragraph currentParagragh = paragraphs.get(i);
 			
-			if(i != (paragraphs.size()-1))
+			/* Volume checking */
+			currentVolume = currentParagragh.getVolume();
+			
+			if(lastVolume != currentVolume)
+			{
+				bookString.append("Volume " + currentVolume + "\n\n");
+				lastChapter = currentChapter;
+			}
+			
+			/* Chapter checking */
+			currentChapter = currentParagragh.getChapter();
+			
+			if(lastChapter != currentChapter)
+			{
+				bookString.append("Chapter " + currentChapter + "\n\n");
+				lastChapter = currentChapter;
+			}
+			
+			//Add the current Paragraph to the String and if needed add the carraige returns
+			bookString.append(currentParagragh.toString());
+			if(i < (paragraphs.size()-1))
 				bookString.append("\n\n");
 		}
 		
@@ -79,5 +114,33 @@ public class Book
 	public void addParagraph(Paragraph paragraph)
 	{
 		paragraphs.add(paragraph);
+	}
+	
+	/**
+	 * Set the author of this book
+	 * 
+	 * @param newAuthor the String author to add
+	 */
+	public void setAuthor(String newAuthor)
+	{
+		author = newAuthor;
+	}
+	
+	/**
+	 * Set the title of this book
+	 * 
+	 * @param newTitle the String title to add
+	 */
+	public void setTitle(String newTitle)
+	{
+		title = newTitle;
+	}
+	
+	/**
+	 * Return the number of Paragraph objects stored in the Book
+	 */
+	public int paragraphSize()
+	{
+		return paragraphs.size();
 	}
 }
