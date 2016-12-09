@@ -31,7 +31,7 @@ public class Paragraph
 		
 		for(String line : lineStrings)
 		{
-			if(!line.equals(""))
+			if(line != null && !line.equals(""))
 				addLine(line);
 		}
 		

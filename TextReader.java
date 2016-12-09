@@ -92,23 +92,30 @@ public class TextReader
 		//Look for paragraph spaces using blank lines
 		for(String line : lineSplit)
 		{
-			if(emptyParagraphs >= 1 && !line.equals(""))
-			{
-				parseLine(line, paragraph);
+			//Found a new Paragraph
+			if(emptyParagraphs > 1 && !line.equals(""))
+			{				
 				linesToAdd.add(line);
+				String[] lines = linesToAdd.toArray(new String[linesToAdd.size()+1]);
 				
-				String[] lines = linesToAdd.toArray(new String[linesToAdd.size()]);
 				paragraph = new Paragraph(lines);
+				//System.out.println("-------------------------");
+				parseLine(line, paragraph);
+				
 				book.addParagraph(paragraph);
-				System.out.println(paragraph.toString());
+				//System.out.println(paragraph.toString());
+				
+				//Reset the empty paragraph counter and the lines to add list
 				emptyParagraphs = 0;
 				linesToAdd.clear();
 			}
+			//Found an empty line
 			else if(line.equals(""))
 			{
 				System.out.println("Found Blank line, adding to " + emptyParagraphs);
 				emptyParagraphs++;
 			}
+			//Found a line within a paragraph
 			else
 			{
 				parseLine(line, paragraph);
@@ -139,7 +146,8 @@ public class TextReader
 		//First word of the line
 		switch(line[0].toLowerCase())
 		{
-			case "title":
+		/* Book Details */	
+		case "title":
 			{	
 				String newTitle = "";
 				for(int i = 1; i<line.length; i++)
@@ -160,7 +168,7 @@ public class TextReader
 				book.setAuthor(newAuthor);
 				break;
 			}
-			
+			/* Paragraph Details */
 			case "volume":
 			{
 				paragraph.setVolume(line[1]);

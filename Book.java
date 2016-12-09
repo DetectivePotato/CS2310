@@ -82,7 +82,7 @@ public class Book
 			/* Volume checking */
 			currentVolume = currentParagragh.getVolume();
 			
-			if(lastVolume != currentVolume)
+			if(lastVolume != currentVolume && currentVolume != "")
 			{
 				bookString.append("Volume " + currentVolume + "\n\n");
 				lastChapter = currentChapter;
@@ -91,7 +91,7 @@ public class Book
 			/* Chapter checking */
 			currentChapter = currentParagragh.getChapter();
 			
-			if(lastChapter != currentChapter)
+			if(lastChapter != currentChapter && currentChapter != "")
 			{
 				bookString.append("Chapter " + currentChapter + "\n\n");
 				lastChapter = currentChapter;

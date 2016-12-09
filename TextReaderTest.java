@@ -20,7 +20,9 @@ public class TextReaderTest
 	{
 		emmaEd11 = reader.readFile(FILE_PATH);
 		
-		emmaEd11.toString();
+		assertNotEquals("",emmaEd11.toString());
+		
+		System.out.println(emmaEd11.toString());
 	}
 
 }
