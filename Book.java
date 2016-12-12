@@ -143,4 +143,19 @@ public class Book
 	{
 		return paragraphs.size();
 	}
+	
+	/**
+	 * Goes through every paragraph calling concordance method
+	 * @param context n words left and right of the target word
+	 * @param word target word
+	 * @return ArrayList<String> 
+	 * @author James Johnson
+	 */
+	public ArrayList<String> wordContext(int context, String word){
+		ArrayList<String> contextString = new ArrayList<String>();
+		for(Paragraph paragraph : paragraphs){
+			contextString.addAll(paragraph.concordance(context, word));
+		}
+		return contextString;
+	}
 }
