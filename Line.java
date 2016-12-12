@@ -72,4 +72,25 @@ public class Line
 	{
 		return target.replaceAll("[^a-zA-Z ]", "");
 	}
+	
+	/**
+	* Returns the size of the line.
+	*/
+	public int size(){
+		return words.size();
+	}
+	
+	/**
+	* Returns index int of the given string
+	*/
+	public int indexOf(String target){
+		return words.indexOf(target);
+	}
+	
+	/**
+	* Returns the String at the given index in the line
+	*/
+	public String get(int index){
+		return words.get(index);
+	}
 }
