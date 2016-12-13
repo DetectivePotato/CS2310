@@ -144,18 +144,21 @@ public class Book
 		return paragraphs.size();
 	}
 	
+	
 	/**
-	 * Goes through every paragraph calling concordance method
+	 * Goes through every paragraph calling concordance method in Kwic class
 	 * @param context n words left and right of the target word
 	 * @param word target word
 	 * @return ArrayList<String> 
 	 * @author James Johnson
 	 */
-	public ArrayList<String> wordContext(int context, String word){
+	public ArrayList<String> kwic(int context, String word){
 		ArrayList<String> contextString = new ArrayList<String>();
 		for(Paragraph paragraph : paragraphs){
-			contextString.addAll(paragraph.concordance(context, word));
+			Kwic kwic = new Kwic(paragraph);
+			contextString.addAll(kwic.concordance(context, word));
 		}
 		return contextString;
 	}
+	
 }
