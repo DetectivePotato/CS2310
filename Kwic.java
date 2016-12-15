@@ -1,6 +1,9 @@
 /**
  * KWIC provides the functionality for searching through a corpus for a target word and displaying all results as well as being able to
  * "zoom" into a result to see more details about it.
+ * 
+ * @author James Johnson
+ * @version 15/12/2016
  */
 import java.util.HashMap;
 import java.util.Map;
@@ -192,7 +195,7 @@ public class Kwic {
 		Paragraph[] resultsParagraphs = contextStrings.values().toArray(new Paragraph[contextStrings.size()]);
 		StringBuilder sb = new StringBuilder();		
 		Paragraph resultsParagraph = resultsParagraphs[Integer.parseInt(kwicId) - 1];
-
+		
 		if(!resultsParagraph.getVolume().isEmpty())
 			sb.append("Volume: " + resultsParagraph.getVolume() + "\t");
 		

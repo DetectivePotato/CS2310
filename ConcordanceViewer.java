@@ -6,12 +6,32 @@
  * @author Anthony Wall
  *
  */
-public class ConcordanceViewer {
+public class ConcordanceViewer 
+{
+	
+	private static Kwic KWIC;;
 
 	public static void main(String[] args) 
 	{
+		SET_UP();
+		
+		new TUI(KWIC);
 
-
+	}
+	
+	private static void SET_UP()
+	{
+		String FilePathEmma = "src\\emmaEd11.txt";
+		String FilePathMansfield = "src\\mansfieldParkEd10.txt";
+		String FilePathPAndP = "src\\pandpEd12.txt";
+		
+		TextReader textReader = new TextReader();	
+		Corpus corpus = new Corpus(textReader.readFile(FilePathEmma));
+		
+		corpus.addBook(textReader.readFile(FilePathMansfield));
+		corpus.addBook(textReader.readFile(FilePathPAndP));
+		
+		KWIC = new Kwic(corpus);
 	}
 
 }
