@@ -219,3 +219,86 @@ public class Kwic {
 		return contextStringBuilder(contextString);
 	}
 }
+
+/******************************************************************************************************
+//Alternative version of contextFinder()
+	/**
+	 * Searches through the Corpus looking for the target word
+	 * a default context size of 10 is used
+	 * 
+	 * @param word the target word to search for in the Corpus
+	 */
+	public void kwicSearch(String word)
+	{
+		kwicSearch(10, word);
+	}
+	
+	/**
+	 * called by concordance to get the words and put in them in an array
+	 * calls another method to turn array to String.
+	 * @param currentLine line containing target word
+	 * @param nextLine next line after current line
+	 * @param previousLine line before current line
+	 * @param context n words left and right of target word
+	 * @param word target word you want to find
+	 * @return String string of target word and n words either side in order of how they appear
+	 * @author James Johnson
+	 */
+	private String contextFinder(Line currentLine, Line nextLine, Line previousLine, int context, String word)
+	{
+		String[] results = new String[(context*2) + 1];
+		results[context] = word;
+		
+		int indexOfWord = currentLine.indexOf(word);
+		
+		//Get the required number of words either side of the target word
+		for(int i = 0; i<context; i++)
+		{
+			int rightIndex = ((indexOfWord + 1) + i);
+			int leftIndex = ((indexOfWord - 1) - i);
+			
+			String leftWord = "";
+			String rightWord = "";
+			
+			/* Right Hand Side */			
+			//Overflow
+			if(rightIndex >= currentLine.size())
+			{				
+				if(nextLine != null)
+				{
+					int remainingIndex = rightIndex-currentLine.size();				
+					rightWord = nextLine.get(remainingIndex);
+				}
+			}
+			//Within range
+			else if(rightIndex < currentLine.size())
+			{
+				rightWord = currentLine.get(rightIndex);
+			}	
+			
+			/* Left Hand Side */			
+			if(leftIndex < 0)
+			{
+				
+				if(previousLine != null)
+				{
+					int remainingIndex = previousLine.size() + leftIndex;		
+					leftWord = previousLine.get(remainingIndex);
+				}
+					}
+			//Within range
+			else if(leftIndex >= 0)
+			{
+				leftWord = currentLine.get(leftIndex);
+			}
+			
+			//Empty check before adding words to the results
+			if(!leftWord.isEmpty())
+				results[(context - 1) - i] = leftWord;
+			if(!rightWord.isEmpty())
+				results[(context + 1) + i] = rightWord;
+		}
+		
+		return contextStringBuilder(results);
+	}
+/******************************************************************************************************
