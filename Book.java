@@ -61,44 +61,17 @@ public class Book
 	 */
 	public String toString()
 	{
-		//Placeholder Strings for chapter and volume display
-		String currentChapter = "";
-		String lastChapter = "";
-		String currentVolume = "";
-		String lastVolume = "";
 		
 		StringBuilder bookString = new StringBuilder();
-		
-		//Add header details for the Book to the String
-		bookString.append("Title: " + title + "\n");
-		bookString.append("Author: " + author + "\n\n");
 		
 		//Iterate through each paragraph in the Book looking for
 		//any chapter or volume changes and add it all to the String
 		for(int i = 0; i < paragraphs.size(); i++)
 		{
-			Paragraph currentParagragh = paragraphs.get(i);
-			
-			/* Volume checking */
-			currentVolume = currentParagragh.getVolume();
-			
-			if(lastVolume != currentVolume && currentVolume != "")
-			{
-				bookString.append("Volume " + currentVolume + "\n\n");
-				lastChapter = currentChapter;
-			}
-			
-			/* Chapter checking */
-			currentChapter = currentParagragh.getChapter();
-			
-			if(lastChapter != currentChapter && currentChapter != "")
-			{
-				bookString.append("Chapter " + currentChapter + "\n\n");
-				lastChapter = currentChapter;
-			}
+			Paragraph currentParagraph = paragraphs.get(i);
 			
 			//Add the current Paragraph to the String and if needed add the carraige returns
-			bookString.append(currentParagragh.toString());
+			bookString.append(currentParagraph.toString());
 			if(i < (paragraphs.size()-1))
 				bookString.append("\n\n");
 		}
@@ -137,28 +110,20 @@ public class Book
 	}
 	
 	/**
+	 * Return the Paragraph stored at the given index
+	 * 
+	 * @param index the Paragraph index to get from this Book
+	 */
+	public Paragraph getParagraph(int index)
+	{
+		return paragraphs.get(index);
+	}
+	
+	/**
 	 * Return the number of Paragraph objects stored in the Book
 	 */
 	public int paragraphSize()
 	{
 		return paragraphs.size();
 	}
-	
-	
-	/**
-	 * Goes through every paragraph calling concordance method in Kwic class
-	 * @param context n words left and right of the target word
-	 * @param word target word
-	 * @return ArrayList<String> 
-	 * @author James Johnson
-	 */
-	public ArrayList<String> kwic(int context, String word){
-		ArrayList<String> contextString = new ArrayList<String>();
-		for(Paragraph paragraph : paragraphs){
-			Kwic kwic = new Kwic(paragraph);
-			contextString.addAll(kwic.concordance(context, word));
-		}
-		return contextString;
-	}
-	
 }

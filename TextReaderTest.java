@@ -6,7 +6,7 @@ import org.junit.Test;
 public class TextReaderTest 
 {
 	private TextReader reader;
-	private final String FILE_PATH = "H:\\My Documents\\CS2310\\Labs\\CS2310_Coursework\\src\\emmaEd11.txt";
+	private final String FILE_PATH = "src\\emmaEd11.txt";
 	private Book emmaEd11;
 	
 	@Before
@@ -20,7 +20,9 @@ public class TextReaderTest
 	{
 		emmaEd11 = reader.readFile(FILE_PATH);
 		
-		assertNotEquals("",emmaEd11.toString());
+		String testString = emmaEd11.toString();
+		
+		assertNotEquals(testString.isEmpty(),testString);
 		
 		System.out.println(emmaEd11.toString());
 	}
