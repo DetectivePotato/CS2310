@@ -223,6 +223,70 @@ public class Kwic {
 /******************************************************************************************************
 //Alternative version of contextFinder()
 	/**
+	 * kwicSearch looks through the Corpus for a target word with a given context sze.
+	 * @param context the number of words either side of the target word
+	 * @param word the target word to search for
+	 * 
+	 * @author James Johnson
+	 */	
+	public void kwicSearch(int context, String word )
+	{
+		Line previousLine = null;
+		Line nextLine = null;
+		Line currentLine;
+		int lineSize;
+		int wordIndex;
+		
+		for(int index = 0; index < corpus.size(); index++)
+			{
+				Book book = corpus.getBook(index);
+						//paragraph.getLine(index);
+			
+				for(int i = 0; i<book.paragraphSize(); i++)
+				{
+					Paragraph paragraph = book.getParagraph(i);
+					for(int x = 0; x<paragraph.size(); x++)
+					{
+						Line line = paragraph.getLine(x);
+						
+						if(line.contains(word))
+						{
+							lineSize = line.size();
+							wordIndex = line.indexOf(word);
+							if(paragraph.indexOf(line) == 0){
+								previousLine = null;
+								if(paragraph.size() > 1)
+								{
+									nextLine = paragraph.getLine(1);
+								}
+							}
+							else if(paragraph.indexOf(line) == paragraph.size()-1){
+								previousLine = paragraph.getLine(paragraph.size()-2);
+								nextLine = null;
+							}
+							else{
+								if(paragraph.size() > 2)
+								{
+									previousLine = paragraph.getLine(paragraph.indexOf(line)-1);
+									nextLine = paragraph.getLine(paragraph.indexOf(line)+1);								
+								}
+							}						
+							String contextString = contextFinder(line, nextLine, previousLine, context, word);
+							contextStrings.put(contextString, paragraph);
+						}
+					}
+				}
+			}
+		String [] searchResults = contextStrings.keySet().toArray(new String[contextStrings.size()]);
+				//toArray(new String[contextStrings.size()]);
+		
+		if(searchResults.length > 0)
+			System.out.println(resultsToString(searchResults));
+		else
+			System.out.println("Word: " + word + " not found!");
+	}
+	
+	/**
 	 * Searches through the Corpus looking for the target word
 	 * a default context size of 10 is used
 	 * 
