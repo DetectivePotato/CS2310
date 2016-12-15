@@ -23,6 +23,7 @@ public class TextReaderTest
 		String testString = emmaEd11.toString();
 		
 		assertNotEquals(testString.isEmpty(),testString);
+		assertEquals("Emma", emmaEd11.getTitle().trim());
 		
 		System.out.println(emmaEd11.toString());
 	}

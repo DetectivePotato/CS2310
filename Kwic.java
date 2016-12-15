@@ -147,7 +147,8 @@ public class Kwic {
 				if(previousLine != null)
 				{
 					int remainingIndex = previousLine.size() + leftIndex;		
-					leftWord = previousLine.get(remainingIndex);
+					if(remainingIndex>0)
+						leftWord = previousLine.get(remainingIndex);
 				}
 					}
 			//Within range
@@ -195,6 +196,18 @@ public class Kwic {
 		Paragraph[] resultsParagraphs = contextStrings.values().toArray(new Paragraph[contextStrings.size()]);
 		StringBuilder sb = new StringBuilder();		
 		Paragraph resultsParagraph = resultsParagraphs[Integer.parseInt(kwicId) - 1];
+		
+		Book[] books = corpus.toArray();
+		System.out.println("Size: " + books.length);
+		
+		for(Book book : books)
+		{
+			System.out.println(book.getTitle() + "\n");
+			if(book.contains(resultsParagraph))
+			{
+				sb.append("Title: " + book.getTitle() + "\n");
+			}
+		}
 		
 		if(!resultsParagraph.getVolume().isEmpty())
 			sb.append("Volume: " + resultsParagraph.getVolume() + "\t");

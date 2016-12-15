@@ -66,7 +66,12 @@ public class TextReader
 				ex.printStackTrace();
 			}
 		}
-		return book;
+		
+		//Reset the held Book object
+		Book tempBook = book;
+		book = new Book();
+		
+		return tempBook;
 	}
 	
 	/**
