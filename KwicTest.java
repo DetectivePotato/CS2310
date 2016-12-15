@@ -9,22 +9,31 @@ import org.junit.Test;
 public class KwicTest {
 
 	private Book book;
+	private Corpus corpus;
+	private Kwic kwic;
 	private TextReader reader;
-	private final String FILE_PATH = "C:\\CodeRepository\\CS2310\\CS2310-Experimental\\emmaEd11.txt";
+	private final String FILE_PATH_EMMA = "src\\emmaEd11.txt";
+	private final String FILE_PATH_PANDP = "src\\pandpEd12.txt";
 
 	@Before
 	public void setUp() throws Exception {
 		reader = new TextReader();
-		book = reader.readFile(FILE_PATH);
+		book = reader.readFile(FILE_PATH_EMMA);
+		corpus = new Corpus(book);
+		corpus.addBook(reader.readFile(FILE_PATH_PANDP));
+		kwic = new Kwic(corpus);
 	}
 
 	@Test
 	public void test() {
-		ArrayList<String> contextStrings = new ArrayList<String>();
-		contextStrings.addAll(book.kwic(10, "affectionate"));
-		for(String string :contextStrings){
-			System.out.println(string);
-		}
+		System.out.print(kwic.kwicSearch(5, "affectionate"));
+		
+		assertEquals(26, kwic.size());
+		
+		System.out.print("\n\n" + kwic.getResultsDetails("" + 14));	
+		kwic.reset();
+		
+		assertEquals(0, kwic.size());
 	}
 
 }

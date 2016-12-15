@@ -39,6 +39,17 @@ public class Book
 	}
 	
 	/**
+	 * Checks if a Paragraph is contained within this Book
+	 * 
+	 * @param target The paragraph to look for
+	 * @return true if the paragraph is contained in this Book
+	 */
+	public boolean contains(Paragraph target)
+	{
+		return paragraphs.contains(target);
+	}
+	
+	/**
 	 * Looks through all Paragraph objects stored in the Book and returns the Lines in an indexed form
 	 * 
 	 * @param target The word to look for
@@ -107,6 +118,22 @@ public class Book
 	public void setTitle(String newTitle)
 	{
 		title = newTitle;
+	}
+	
+	/**
+	 * Returns the author of this Book
+	 */
+	public String getAuthor()
+	{
+		return author;
+	}
+	
+	/**
+	 * Returns the title of this Book
+	 */
+	public String getTitle()
+	{
+		return title;
 	}
 	
 	/**

@@ -1,227 +1,34 @@
-import java.util.ArrayList;
+/**
+ * KWIC provides the functionality for searching through a corpus for a target word and displaying all results as well as being able to
+ * "zoom" into a result to see more details about it.
+ */
+import java.util.HashMap;
+import java.util.Map;
 
 public class Kwic {
-	private ArrayList<Line> lines;
-	private Paragraph paragraph;
+	private Corpus corpus;
+	private Map<String, Paragraph> contextStrings;
 	
-	public Kwic(Paragraph paragraph){
-		this.paragraph = paragraph;
+	/**
+	 * Constructs a Kwic object with a Corpus object for later searching
+	 * @param corpus
+	 */
+	public Kwic(Corpus corpus){
+		this.corpus = corpus;
+		contextStrings = new HashMap<String, Paragraph>();
 	}
 	
 	/**
-	 * concordance takes int corpus the number of words either side of the word that is passed into the method.
-	 * @param context the number of words either side of
-	 * @param word the target word
-	 * @return ArrayList ArrayList containing all strings of target word with n words either side
-	 * @author James Johnson
-	 */	
-	public ArrayList concordance(int context, String word )
+	 * Searches through the Corpus looking for the target word
+	 * a default context size of 10 is used
+	 * 
+	 * @param word the target word to search for in the Corpus
+	 */
+	public String kwicSearch(String word)
 	{
-		Line previousLine;
-		Line nextLine;
-		Line currentLine;
-		int lineSize;
-		int wordIndex;
-		ArrayList<Integer> numberOfLines = new ArrayList<Integer>();
-		ArrayList<String> contextStrings = new ArrayList<String>();
-		for(int index = 0; index < paragraph.size(); index++)
-			{
-				Line l = paragraph.getLine(index);
-			
-				if(l.contains(word))
-				{
-					lineSize = l.size();
-					wordIndex = l.indexOf(word);
-					if(paragraph.indexOf(l) == 0){
-						previousLine = null;
-						nextLine = paragraph.getLine(1);
-						numberOfLines.add(1);
-						contextStrings.add(contextFinder(l, nextLine, previousLine, context, word));
-					}
-					else if(paragraph.indexOf(l) == paragraph.size()-1){
-						previousLine = paragraph.getLine(paragraph.size()-1);
-						nextLine = null;
-						numberOfLines.add(2);
-						contextStrings.add(contextFinder(l, nextLine, previousLine, context, word));
-					}
-					else{
-						previousLine = paragraph.getLine(paragraph.indexOf(l)-1);
-						nextLine = paragraph.getLine(paragraph.indexOf(l)+1);
-						numberOfLines.add(3);
-						contextStrings.add(contextFinder(l, nextLine, previousLine, context, word));
-					}
-				}
-			}
-		return contextStrings;
+		return kwicSearch(10, word);
 	}
 	
-	
-	/**
-	 * Builds line from Strings in array
-	 * @param array Array containing target word and n words either side
-	 * @return String string of words in array.
-	 * @author James Johnson
-	 */
-	private String contextStringBuilder(String[] array){
-		StringBuilder sb = new StringBuilder();
-		for(String text : array){
-			if(text == null){
-				sb.append("\t");
-			}
-			else{
-				sb.append(text + " ");
-				}
-		}
-	return sb.toString();
-	}
-	
-	/**
-	 * called by concordance to get the words and put in them in an array
-	 * calls another method to turn array to String.
-	 * @param currentLine line containing target word
-	 * @param nextLine next line after current line
-	 * @param previousLine line before current line
-	 * @param context n words left and right of target word
-	 * @param word target word you want to find
-	 * @return String string of target word and n words either side in order of how they appear
-	 * @author James Johnson
-	 */
-	
-	public String contextFinder(Line currentLine, Line nextLine, Line previousLine, int context, String target){
-		Line cLine = currentLine;
-		 int indexLeft;
-		 int indexRight;
-		 Line pLine = previousLine;
-		 Line nLine = nextLine;
-		 int previousIndex;
-		 int nextIndex;
-		 if(pLine == null && nLine == null){
-			 previousIndex = -1;
-			 nextIndex = -1;
-		 }
-		 else if(pLine == null){
-			 previousIndex = -1;
-			 nextIndex = paragraph.indexOf(nLine);
-		 }
-		 else if(nLine == null){
-			 previousIndex = paragraph.indexOf(pLine);
-			 nextIndex = -1;
-		 }
-		 else{
-			 previousIndex = paragraph.indexOf(pLine);
-			 nextIndex = paragraph.indexOf(nLine);
-		 }
-		 
-		 int pLinesSize = cLine.size();
-		 int nLinesSize = cLine.size();
-		 int targetIndex = cLine.indexOf(target);
-		 String[] contextString = new String[(context*2)+1];
-		 contextString[context] = target;
-		 for(int i = 0; i<context ; i++){
-			 indexLeft = context-(i+1);
-			 indexRight = context+(i+1);
-			 int leftIndex = context-(1+i);
-				int rightIndex = context+(1+i);
-				
-				if(targetIndex-(i+1)<0 && targetIndex+(i+1)>= cLine.size()){
-					if(previousLine == null && nextLine == null){
-						contextString[leftIndex] = null;
-						contextString[rightIndex] = null;
-						
-					}
-					else if(previousLine == null){
-						contextString[leftIndex] = null;
-						if(rightIndex - nLinesSize > nextLine.size()){
-							if(nextIndex != paragraph.size()-1){
-								nLinesSize = nLinesSize + nextLine.size();
-								nextIndex++;
-								nextLine = paragraph.getLine(nextIndex);
-							}
-						}
-						contextString[rightIndex] = nextLine.get(rightIndex-nLinesSize);
-					}
-					else if(nextLine == null){
-						if(pLinesSize + (targetIndex-(1+i)) < 0){
-							if(previousIndex != 0){
-								previousIndex--;
-								pLinesSize = pLinesSize + previousLine.size();
-								previousLine = paragraph.getLine(previousIndex);
-							}
-						}
-						contextString[leftIndex] = previousLine.get(pLinesSize + (targetIndex-(1+i)));
-						contextString[rightIndex] = null;
-					}
-					else{
-						if(pLinesSize + (targetIndex-(1+i)) < 0){
-							if(previousIndex != 0){
-								previousIndex--;
-								pLinesSize = pLinesSize + previousLine.size();
-								previousLine = paragraph.getLine(previousIndex);
-							}
-						}
-						contextString[leftIndex] = previousLine.get(pLinesSize + (targetIndex-(1+i)));
-						if(rightIndex - nLinesSize > nextLine.size()){
-							if(nextIndex != paragraph.size()-1){
-								nLinesSize = nLinesSize + nextLine.size();
-								nextIndex++;
-								nextLine = paragraph.getLine(nextIndex);
-							}
-						}
-						contextString[rightIndex] = nextLine.get((targetIndex+(1+i))- nLinesSize);
-					}
-				}
-				//right index needs to go onto a line before the line containing the target word
-				else if(targetIndex-(i+1)<0){
-					//if null can't do anything so always equals null
-					if(previousLine == null){
-						contextString[leftIndex] = null;
-						contextString[rightIndex] = cLine.get(targetIndex+(1+i));
-	 				}
-					//else can go onto another line
-					else{
-						if(pLinesSize + (targetIndex-(1+i)) < 0){
-							if(previousIndex != 0){
-								previousIndex--;
-								pLinesSize = pLinesSize + previousLine.size();
-								previousLine = paragraph.getLine(previousIndex);
-							}
-						}
-						contextString[leftIndex] = previousLine.get(pLinesSize + (targetIndex-(1+i)));
-						contextString[rightIndex] = cLine.get(targetIndex+(1+i));
-					}
-				}
-				//if context is greater than number of words to right of target  word 
-				// must go onto another line
-				else if(targetIndex+(i+1) >= cLine.size()){
-					//if next line is null then value must be null
-					if(nextLine == null){
-						contextString[leftIndex] = cLine.get(targetIndex-(1+i));
-						contextString[rightIndex] = null;
-					}
-					// else go onto another line and continue getting words
-					else{
-						contextString[leftIndex] = cLine.get(targetIndex-(1+i));
-						if(rightIndex - nLinesSize > nextLine.size()){
-							if(nextIndex != paragraph.size()-1){
-								nLinesSize = nLinesSize + nextLine.size();
-								nextIndex++;
-								nextLine = paragraph.getLine(nextIndex);
-							}
-						}
-						contextString[rightIndex] = nextLine.get((targetIndex+1+i)-nLinesSize);
-					}
-				}
-				else{
-					contextString[leftIndex] = cLine.get(targetIndex-(1+i));
-					contextString[rightIndex] = cLine.get(targetIndex+(1+i));
-				}
-			}	
-		return contextStringBuilder(contextString);
-	}
-}
-
-/******************************************************************************************************
-//Alternative version of contextFinder()
 	/**
 	 * kwicSearch looks through the Corpus for a target word with a given context sze.
 	 * @param context the number of words either side of the target word
@@ -229,7 +36,7 @@ public class Kwic {
 	 * 
 	 * @author James Johnson
 	 */	
-	public void kwicSearch(int context, String word )
+	public String kwicSearch(int context, String word )
 	{
 		Line previousLine = null;
 		Line nextLine = null;
@@ -281,20 +88,9 @@ public class Kwic {
 				//toArray(new String[contextStrings.size()]);
 		
 		if(searchResults.length > 0)
-			System.out.println(resultsToString(searchResults));
+			return resultsToString(searchResults);
 		else
-			System.out.println("Word: " + word + " not found!");
-	}
-	
-	/**
-	 * Searches through the Corpus looking for the target word
-	 * a default context size of 10 is used
-	 * 
-	 * @param word the target word to search for in the Corpus
-	 */
-	public void kwicSearch(String word)
-	{
-		kwicSearch(10, word);
+			return ("Word: " + word + " not found!");
 	}
 	
 	/**
@@ -331,7 +127,8 @@ public class Kwic {
 				if(nextLine != null)
 				{
 					int remainingIndex = rightIndex-currentLine.size();				
-					rightWord = nextLine.get(remainingIndex);
+					if(remainingIndex<nextLine.size())
+						rightWord = nextLine.get(remainingIndex);
 				}
 			}
 			//Within range
@@ -365,4 +162,80 @@ public class Kwic {
 		
 		return contextStringBuilder(results);
 	}
-/******************************************************************************************************
+	
+	/**
+	 * Builds line from Strings in array
+	 * @param contextStrings Array containing target word and n words either side
+	 * @return String string of words in array.
+	 * @author James Johnson
+	 */
+	private String contextStringBuilder(String[] contextStrings){
+		StringBuilder sb = new StringBuilder();
+		for(String text : contextStrings)
+		{			
+			if(text == null){
+				sb.append("\t" + " ");
+			}
+			else{
+				sb.append(text + " ");
+				}
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * Given an index, return more detail about a search result
+	 * @param kwicId which searchResult to expand
+	 */
+	public String getResultsDetails(String kwicId)
+	{
+		Paragraph[] resultsParagraphs = contextStrings.values().toArray(new Paragraph[contextStrings.size()]);
+		StringBuilder sb = new StringBuilder();		
+		Paragraph resultsParagraph = resultsParagraphs[Integer.parseInt(kwicId) - 1];
+
+		if(!resultsParagraph.getVolume().isEmpty())
+			sb.append("Volume: " + resultsParagraph.getVolume() + "\t");
+		
+		if(!resultsParagraph.getChapter().isEmpty())
+			sb.append("Chapter: " + resultsParagraph.getChapter() + "\n");
+		
+		sb.append(resultsParagraph.toString());
+		return sb.toString();
+	}
+	
+	/**
+	 * Return a String representation of the searchResults
+	 * 
+	 * @param searchResults the results of a given Kwic search
+	 */
+	public String resultsToString(String[] searchResults)
+	{
+		int lineNumber = 1;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Search Results" + "\n---------------------\n");		
+		for(String searchResult : searchResults)
+		{
+			sb.append(lineNumber + ": " + searchResult + "\n");
+			lineNumber++;
+		}
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * Returns the number of results currently stored in this Kwic
+	 */
+	public int size()
+	{
+		return contextStrings.size();
+	}
+	
+	/**
+	 * Reset this Kwic by clearing the stored Map
+	 */
+	public void reset()
+	{
+		contextStrings.clear();
+	}
+}

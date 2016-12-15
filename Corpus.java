@@ -30,6 +30,23 @@ public class Corpus
 		
 		books.add(book);
 	}
+	/**
+	 * Add a Book into the Corpus
+	 * 
+	 * @param newBook the Book to add
+	 */
+	public void addBook(Book newBook)
+	{
+		books.add(newBook);
+	}
+	
+	/**
+	 * Return a Book[] containing all books currently in the Corpus
+	 */
+	public Book[] toArray()
+	{
+		return books.toArray(new Book[books.size()]);
+	}
 	
 	/**
 	 * Return the number of Book objects stored in this Corpus
