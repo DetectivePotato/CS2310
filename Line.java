@@ -33,7 +33,7 @@ public class Line
 		
 		String[] lineArray = lineString.split(" ");
 		
-		//Add each word into the words list after removing any special characters
+		//Add each word into the words list
 		for(String word : lineArray)
 		{
 			words.add(cleanWord(word));
@@ -48,27 +48,6 @@ public class Line
 	public boolean contains(String target)
 	{
 		return words.contains(target);
-	}
-	
-	/**
-	* Returns the size of the line.
-	*/
-	public int size(){
-		return words.size();
-	}
-	
-	/**
-	* Returns index int of the given string
-	*/
-	public int indexOf(String target){
-		return words.indexOf(target);
-	}
-	
-	/**
-	* Returns the String at the given index in the line
-	*/
-	public String get(int index){
-		return words.get(index);
 	}
 	
 	/**
@@ -91,10 +70,30 @@ public class Line
 	 */
 	private String cleanWord(String target)
 	{
-		target.trim();
-		
 		return target.replaceAll("[^a-zA-Z ]", "");
 	}
 	
+	/**
+	* Returns the size of the line.
+	*/
+	public int size(){
+		return words.size();
+	}
 	
+	/**
+	* Returns index int of the given string
+	*/
+	public int indexOf(String target){
+		return words.indexOf(target);
+	}
+	
+	/**
+	* Returns the String at the given index in the line
+	*/
+	public String get(int index){
+		if(index<0 || index >= size()){
+			return null;
+		}
+		return words.get(index);
+	}
 }

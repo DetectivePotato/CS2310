@@ -21,7 +21,7 @@ public class KwicTest {
 	@Test
 	public void test() {
 		ArrayList<String> contextStrings = new ArrayList<String>();
-		contextStrings.addAll(book.kwic(5, "affectionate"));
+		contextStrings.addAll(book.kwic(10, "affectionate"));
 		for(String string :contextStrings){
 			System.out.println(string);
 		}
